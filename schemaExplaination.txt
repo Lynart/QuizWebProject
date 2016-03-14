@@ -1,0 +1,39 @@
+This document contains the rationale behind the
+schema design.
+
+Table User
+There will only be one admin and the system will
+check the username to see if it is the admin; this is obviously a security flaw but this is not a real world implementation.
+
+Table Quiz
+A quiz is randomly generated when a user requests
+to take a quiz. Due to this, every quiz is unique
+and assigned a user. The quiz object will contain
+5 easy questions, 3 medium questions, and 2 hard
+questions.
+
+Table Question
+Quizes may have multiple questions. A question will 
+contain a difficulty of 1 to 3, 1 being easy and 3 
+being hard. The "type" of question will specify to 
+the client how to display the question and its
+assiocated answers.
+
+We can hardcode type selections during quiz creation
+to make sure there are no discrepancies. 
+
+Table Answer
+Questions may have multiple answers and some may or
+may not be correct.
+
+NOTE
+Because question types are not specified, nor is the reviewing of a previously attempted quiz a requirement, there is no need to save user input aside from their final score.
+
+All questions will have a score value of 1 (therefore each quiz has a max score of 10).
+
+Implementable question types based on this schema are:
+
+Multi choice
+Multi multi choice
+
+If other question types are used (short answer, matching, numerical input/steps), the schema has to change.

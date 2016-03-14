@@ -1,0 +1,30 @@
+You need EclipseLink and a mysql driver.
+
+Schema Implementation Notes:
+
+Question.Type is very important
+
+## H2 Type == Checkbox
+Question has multiple answers. Answer.correct is in use for scoring
+
+## H2 Type == Dropdown
+Question has self referncing multiple questions. The parent Question will have access to answers. Each question will have a correctAnswerId.
+
+Use parent Question to create sub questions (DO NOT USE SUB QUESTIONS OR THIS LEADS TO HAVING TO TRAVEL A TREE). Use the parent question to associate Answers. Use each Question.CorrectAnswer to score.
+
+NOTE CHILD QUESTIONS ONLY HAVE ACCESS TO CORRECTANSWER. PARENT QUESTION HAS ACCESS TO ALL ANSWERS (correct or not)
+
+## H2 Type == Multi choice
+Question has multiple answers. Only one correct answer exists. Fill out both Question.correctAnswer and Answer.correct. 
+
+## H2 Type == Numeric input
+Question has self referencing questions. Each question has a correct Answer. Answer.description will contain a number. UserResponse.response must match that number.
+
+UserResponse = answerId can be null.
+
+## H2 Type == Text input
+Question.Answer.Description == actual answer but not shown. Match UseResponse.response with this. 
+
+Enter both Question.CorrectAnswerId and Answer.correct
+
+UserResponse = answerId can be null.

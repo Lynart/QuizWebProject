@@ -67,7 +67,7 @@ public class Register {
 		}
 	}
 	
-	public void TestRetrieval(){
+	public String TestRetrieval(){
 		getEntityManager();
 		String q = "FROM "+User.class.getSimpleName()+" e WHERE e.password='1234'";
 		User v = (User)em.createQuery(q).getSingleResult();
@@ -77,12 +77,14 @@ public class Register {
 		System.out.println(quiz.getUserScore());
 		em.close();
 		emf.close();
+		return v.getLogin();
+		
 	}
 	
-	public static void main ( String[] args){
+	public static String main ( String[] args){
 		Register register = new Register();
 		register.resetTables();
 		register.TestTables();
-		register.TestRetrieval();
+		return register.TestRetrieval();
 	}
 }

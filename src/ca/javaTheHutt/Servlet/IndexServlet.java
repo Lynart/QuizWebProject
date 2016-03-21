@@ -31,50 +31,33 @@ public class IndexServlet extends HttpServlet {
 	 */
 	public IndexServlet() {
 		super();
-		cm = new ContextManager();
-
 	}
 
+	// http://stackoverflow.com/questions/9381356/why-we-use-init-rather-constructor
+	// Useful stuff
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
-		/*
-		 * ds = DataSourceFactory.getMySQLDataSource(); try { conn =
-		 * ds.getConnection(); } catch (SQLException e) { e.printStackTrace(); }
-		 */
+		cm = new ContextManager();
 	}
 
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse
 	 *      response)
 	 */
+	// http://www.javapractices.com/topic/TopicAction.do?Id=181
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		// TODO Auto-generated method stub
-
-		if (user == null) {
-			RequestDispatcher rd = getServletContext().getRequestDispatcher("/index.html");
-			response.getWriter().println("<p>WOO FUCKING LOO!</p>");
-			rd.include(request, response);
-			//rd.forward(request, response);
-			
-			
-		} else {
-			RequestDispatcher rd = getServletContext().getRequestDispatcher("/index.html");
-
-			PrintWriter out = response.getWriter();
-			Register r = new Register();
-			out.println(r.main(new String[1]));
-			response.getWriter().append("Served at: Murloc").append(request.getContextPath());
-		}
+		doPost(request, response);
 	}
-	
+
 	/*
-        	RequestDispatcher rd = getServletContext().getRequestDispatcher("/index.html");
-            PrintWriter out= response.getWriter();
-            out.println("<p style=\"color:red;\">Either email or password is wrong. "
-            		+ "Please try again.</p>");
-            rd.include(request, response);
-	 * */
+	 * RequestDispatcher rd =
+	 * getServletContext().getRequestDispatcher("/index.html"); PrintWriter out=
+	 * response.getWriter(); out.println(
+	 * "<p style=\"color:red;\">Either email or password is wrong. " +
+	 * "Please try again.</p>"); rd.include(request, response);
+	 */
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse
@@ -83,20 +66,17 @@ public class IndexServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		// TODO Auto-generated method stub
-        String email = request.getParameter("email");
-        String pwd = request.getParameter("password");
-        
-        User u = cm.Login(email, pwd);
-        if(u==null){
-			RequestDispatcher rd = getServletContext().getRequestDispatcher("/index.html");
-			response.getWriter().println("<p>WOO FUCKING LOO!</p>");
+
+		String email = request.getParameter("user");
+		String pwd = request.getParameter("pass");
+
+		user = cm.Login(email, pwd);
+		if (user == null) {
+			RequestDispatcher rd = request.getRequestDispatcher("/deprecatedIndexDelete.html");
 			rd.include(request, response);
-        }
-        else{
-			PrintWriter out = response.getWriter();
-			Register r = new Register();
-			response.getWriter().append("WOOOOOOOOLOOOOOOOOOOOLOOOOOOOOOOO!").append(request.getContextPath());
-        }
+		} else {
+			getServletContext().getRequestDispatcher("/Menu.html").forward(request, response);
+		}
 	}
 
 	public void destroy() {

@@ -1,0 +1,31 @@
+#grad {
+
+
+  background: #517fa4; /* fallback for old browsers */
+  background: -webkit-linear-gradient(to left, #517fa4 , #243949); /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to left, #517fa4 , #243949); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+			
+  min-height: 100%;
+  margin-bottom: 50px;
+}
+		
+		
+		
+.vertical-center {
+  min-height: 100%;  /* Fallback for browsers do NOT support vh unit */
+  min-height: 100vh; /* These two lines are counted as one :-)       */
+
+  display: flex;
+  align-items: center;
+}
+.horizontal-center {
+	text-align: center;
+}
+
+
+h1{
+	text-align: center;	
+	color: white !important;
+}
+
+

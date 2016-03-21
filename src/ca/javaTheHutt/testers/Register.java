@@ -36,9 +36,9 @@ public class Register {
 	
 	public void TestTables(){
 		User u = new User();
-		u.setLogin("vince@gmail.com");
+		u.setLogin("admin@admin.ca");
 		u.setPassword("1234");
-		
+		/*
 		Quiz q = new Quiz();
 		q.setUser(u);
 		u.addQuiz(q);
@@ -50,14 +50,17 @@ public class Register {
 		Answer a = new Answer();
 		a.setQuestion(question);
 		question.addAnswer(a);
+		*/
 		
 		try{
 			getEntityManager();
 			em.getTransaction().begin();
 			em.persist(u);
+			/*
 			em.persist(q);
 			em.persist(question);
 			em.persist(a);
+			*/
 			em.getTransaction().commit();
 			em.close();
 			emf.close();
@@ -81,10 +84,9 @@ public class Register {
 		
 	}
 	
-	public static String main ( String[] args){
+	public static void main ( String[] args){
 		Register register = new Register();
 		register.resetTables();
 		register.TestTables();
-		return register.TestRetrieval();
 	}
 }

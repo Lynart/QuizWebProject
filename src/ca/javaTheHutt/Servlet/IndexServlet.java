@@ -72,10 +72,10 @@ public class IndexServlet extends HttpServlet {
 
 		user = cm.Login(email, pwd);
 		if (user == null) {
-			RequestDispatcher rd = request.getRequestDispatcher("/deprecatedIndexDelete.html");
+			RequestDispatcher rd = getServletContext().getRequestDispatcher("/index.html");
 			rd.include(request, response);
-		} else {
-			getServletContext().getRequestDispatcher("/Menu.html").forward(request, response);
+		} else if (user.getLogin().equalsIgnoreCase("admin@admin.ca")){
+			getServletContext().getRequestDispatcher("/menu.html").forward(request, response);
 		}
 	}
 

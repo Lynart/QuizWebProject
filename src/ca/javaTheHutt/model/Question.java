@@ -21,8 +21,8 @@ public class Question {
 	// Will hardcode type of questions and construct the UI accordingly
 	@Enumerated(EnumType.STRING)
 	private QuestionType type;
-	@ManyToOne
-	private Quiz quiz;
+	@ManyToMany
+	private Collection<Quiz> quizes;
 	@OneToMany
 	private Collection<Answer> answers;
 	@OneToOne
@@ -60,8 +60,8 @@ public class Question {
 		return type;
 	}
 
-	public Quiz getQuiz() {
-		return quiz;
+	public Collection<Quiz> getQuiz() {
+		return quizes;
 	}
 
 	public Collection<Answer> getAnswers() {
@@ -105,8 +105,8 @@ public class Question {
 		type = t;
 	}
 
-	public void setQuiz(Quiz q) {
-		quiz = q;
+	public void addQuiz(Quiz q) {
+		quizes.add(q);
 	}
 
 	public void addAnswer(Answer a) {
@@ -134,6 +134,7 @@ public class Question {
 		answers = new ArrayList<Answer>();
 		subQuestions = new ArrayList<Question>();
 		userResponses = new ArrayList<UserResponse>();
+		quizes = new ArrayList<Quiz>();
 	}
 
 	// Useful methods

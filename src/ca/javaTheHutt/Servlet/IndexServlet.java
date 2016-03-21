@@ -75,8 +75,12 @@ public class IndexServlet extends HttpServlet {
 			RequestDispatcher rd = getServletContext().getRequestDispatcher("/index.html");
 			rd.include(request, response);
 		} else if (user.getLogin().equalsIgnoreCase("admin@admin.ca")){
-			request.getSession().setAttribute("user", user);
+			//Originally using the below for security, security will be assumed instead
+			//request.getSession().setAttribute("user", user);
 			getServletContext().getRequestDispatcher("/admin").forward(request, response);
+		}
+		else{
+			//Forward to quiz taking stuff
 		}
 	}
 

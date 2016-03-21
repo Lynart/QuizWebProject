@@ -18,7 +18,7 @@ public class Quiz {
 	private int userScore;
 	@ManyToOne
 	private User user;
-	@OneToMany
+	@ManyToMany
 	private Collection<Question> questions;
 	@OneToMany
 	private Collection<UserResponse> userResponse;

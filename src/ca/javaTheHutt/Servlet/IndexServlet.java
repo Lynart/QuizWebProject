@@ -75,7 +75,8 @@ public class IndexServlet extends HttpServlet {
 			RequestDispatcher rd = getServletContext().getRequestDispatcher("/index.html");
 			rd.include(request, response);
 		} else if (user.getLogin().equalsIgnoreCase("admin@admin.ca")){
-			getServletContext().getRequestDispatcher("/menu.html").forward(request, response);
+			request.getSession().setAttribute("user", user);
+			getServletContext().getRequestDispatcher("/admin").forward(request, response);
 		}
 	}
 

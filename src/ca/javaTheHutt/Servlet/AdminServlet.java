@@ -60,23 +60,27 @@ public class AdminServlet extends HttpServlet {
 			addQuestion(request);
 
 		} else {
-			doGet(request, response);
 		}
+		doGet(request, response);
 	}
 
 	private void addQuestion(HttpServletRequest request) {
 		String questionType = request.getParameter("questionType");
-		//int difficulty = Integer.parseInt(request.getParameter("difficulty"));
+		int difficulty = Integer.parseInt(request.getParameter("multichoiceDifficulty"));
 		Question question = new Question();
+		question.setDifficulty(difficulty);
+		Answer a = new Answer();
+		Answer b = new Answer();
+		Answer c = new Answer();
+		Answer d = new Answer();
+		
 		switch (questionType) {
 		case "Checkbox":
 			question.setType(QuestionType.Checkbox);
-			//question.setDifficulty(difficulty);
 			question.setDescription(request.getParameter("checkQuestion"));
 			
 			//I admit, this looks stupid but I am not sure if you have to set both ends
 			//I miss .NET entity framework
-			Answer a = new Answer();
 			a.setQuestion(question);
 			if(request.getParameter("boolA")!=null)
 				a.setCorrect(true);
@@ -84,7 +88,6 @@ public class AdminServlet extends HttpServlet {
 				a.setCorrect(false);
 			a.setDescription(request.getParameter("checkA"));
 			
-			Answer b = new Answer();
 			b.setQuestion(question);
 			if(request.getParameter("boolB")!=null)
 				b.setCorrect(true);
@@ -92,7 +95,6 @@ public class AdminServlet extends HttpServlet {
 				b.setCorrect(false);
 			b.setDescription(request.getParameter("checkB"));
 			
-			Answer c = new Answer();
 			c.setQuestion(question);
 			if(request.getParameter("boolC")!=null)
 				c.setCorrect(true);
@@ -100,7 +102,6 @@ public class AdminServlet extends HttpServlet {
 				c.setCorrect(false);
 			c.setDescription(request.getParameter("checkC"));
 		
-			Answer d = new Answer();
 			d.setQuestion(question);
 			if(request.getParameter("boolD")!=null)
 				d.setCorrect(true);
@@ -115,9 +116,68 @@ public class AdminServlet extends HttpServlet {
 			
 			cm.AddQuestion(question);
 			break;
+			
+		//Repeated code sucks but at least this isn't production code
 		case "Multichoice":
+			question.setType(QuestionType.Multichoice);
+			question.setDescription(request.getParameter("multiQ"));
+			
+			//Didn't know you can't have same var names in switches; I clearly don't use switches enough
+			//....or .NET's compiler
+			a.setDescription(request.getParameter("multiA"));
+			a.setQuestion(question);
+			a.setCorrect(false);
+			
+			b.setDescription(request.getParameter("multiB"));
+			b.setQuestion(question);
+			b.setCorrect(false);
+			
+			c.setDescription(request.getParameter("multiC"));
+			c.setQuestion(question);
+			c.setCorrect(false);
+			
+			d.setDescription(request.getParameter("multiD"));
+			d.setQuestion(question);
+			d.setCorrect(false);
+			
+			String correctA = request.getParameter("multiAnswer");
+			switch(correctA){
+			case "A":
+				a.setCorrect(true);
+				question.setCorrectAnswer(a);
+				break;
+			case "B":
+				b.setCorrect(true);
+				question.setCorrectAnswer(b);
+				break;
+			case "C":
+				c.setCorrect(true);
+				question.setCorrectAnswer(c);
+				break;
+			case "D":
+				d.setCorrect(true);
+				question.setCorrectAnswer(d);
+				break;
+			//THIS SHOULD NEVER HIT
+			default:
+				break;
+			}
+			question.addAnswer(a);
+			question.addAnswer(b);
+			question.addAnswer(c);
+			question.addAnswer(d);
+			cm.AddQuestion(question);
 			break;
 		case "Text":
+			question.setType(QuestionType.Text);
+			question.setDescription(request.getParameter("shortQuestion"));
+			
+			a.setDescription(request.getParameter("shortAnswer"));
+			a.setCorrect(true);
+			a.setQuestion(question);
+			question.addAnswer(a);
+			
+			cm.AddQuestion(question);
 			break;
 				
 		default:

@@ -87,7 +87,17 @@
 	
 		function checkQuestionType(){	
 			<!--Multiple Choice-->
-			var mcHTML = 	"<div class='form-group' name='mcq'>" +
+			var mcHTML = 	
+							"<div class='form-group'>" +
+							"<label for='multichoiceDifficulty'>Select the Difficulty</label>" +
+							"<select class='form-control' name='multichoiceDifficulty'>" +
+							"<option selected='selected'>Select the Difficulty</option>" +
+							"<option value='1'>Easy</option>" +
+							"<option value='2'>Medium</option>" +
+							"<option value='3'>Hard</option>" +
+							"</select>" +
+							"</div>" +
+							"<div class='form-group' name='mcq'>" +
 							"<label for='multiQuestion'>Question</label>" +
 							"<input type='text' class='form-control' name='multiQ' placeholder='Enter a Question'>" +
 							"</div>" +
@@ -120,6 +130,15 @@
 							"<button type='submit' class='btn btn-success' onClick='successMessage()'>Submit</button>";
 			<!--Checkbox-->
 			var cbHTML = 	"<div class='form-group'>" +
+							"<label for='checkboxDifficulty'>Select the Difficulty</label>" +
+							"<select class='form-control' name='checkboxDifficulty'>" +
+							"<option selected='selected'>Select the Difficulty</option>" +
+							"<option value='1'>Easy</option>" +
+							"<option value='2'>Medium</option>" +
+							"<option value='3'>Hard</option>" +
+							"</select>" +
+							"</div>" +
+							"<div class='form-group'>" +
 							"<label for='checkQuestion'>Question</label>" +
 							"<input type='text' class='form-control' name='checkQuestion' placeholder='Enter a Question'>" +
 							"</div>" +
@@ -147,6 +166,15 @@
 							"<button type='submit' class='btn btn-success' onClick='successMessage()'>Submit</button>";
 			<!--Short Answer-->
 			var saHTML = 	"<div class='form-group'>" +
+							"<label for='textDifficulty'>Select the Difficulty</label>" +
+							"<select class='form-control' name='textDifficulty'>" +
+							"<option selected='selected'>Select the Difficulty</option>" +
+							"<option value='1'>Easy</option>" +
+							"<option value='2'>Medium</option>" +
+							"<option value='3'>Hard</option>" +
+							"</select>" +
+							"</div>" +		
+							"<div class='form-group'>" +
 							"<label for='shortQuestion'>Question Text</label>" +
 							"<input type='text' class='form-control' name='shortQuestion' placeholder='Enter the short-answer question text'>" +
 							"</div>" +

@@ -1,6 +1,8 @@
 package ca.javaTheHutt.Servlet;
 
 import java.sql.SQLException;
+import java.util.Iterator;
+
 import javax.persistence.*;
 import javax.sql.DataSource;
 import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
@@ -53,8 +55,10 @@ public class ContextManager {
 		em.getTransaction().begin();
 		em.persist(q);
 		// Add all answers
-		while (q.getAnswers().iterator().hasNext()) {
-			em.persist(q.getAnswers().iterator().next());
+
+		Iterator<Answer> a = q.getAnswers().iterator();
+		while (a.hasNext()) {
+			em.persist(a.next());
 		}
 		em.getTransaction().commit();
 	}

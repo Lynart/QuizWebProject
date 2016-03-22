@@ -66,7 +66,7 @@ public class AdminServlet extends HttpServlet {
 
 	private void addQuestion(HttpServletRequest request) {
 		String questionType = request.getParameter("questionType");
-		int difficulty = Integer.parseInt(request.getParameter("multichoiceDifficulty"));
+		int difficulty = Integer.parseInt(request.getParameter("questionDifficulty"));
 		Question question = new Question();
 		question.setDifficulty(difficulty);
 		Answer a = new Answer();

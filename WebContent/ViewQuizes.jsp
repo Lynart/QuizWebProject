@@ -8,23 +8,28 @@
 <title>Insert title here</title>
 </head>
 <body>
-	<form class="col-md-12" action="admin" method="post">
-		<table border="1">
-			<c:forEach var="question" items="${questions}">
-				<tr>
-					<td>
+	<!-- Below will be blank unless delete is requested and fails -->
+	${noDelete}
+	<table border="1">
+		<c:forEach var="question" items="${questions}">
+			<tr>
+				<td>
+					<form action="admin" method="post">
 						<button type="submit" name="getQuestion"
 							value="${question.getId()}">
 							<c:out value="${question.getId()}" />
 						</button>
-					</td>
-					<td><c:out value="${question.getId()}" /></td>
-					<td><c:out value="${question.getDifficulty()}" /></td>
-					<td><c:out value="${question.getType()}" /></td>
-					<td><c:out value="${question.getDescription()}" /></td>
-				</tr>
-			</c:forEach>
-		</table>
-	</form>
+						<button type="submit" name="deleteQuestion"
+							value="${question.getId()}">Delete</button>
+					</form>
+				</td>
+				<td><c:out value="${question.getId()}" /></td>
+				<td><c:out value="${question.getDifficulty()}" /></td>
+				<td><c:out value="${question.getType()}" /></td>
+				<td><c:out value="${question.getDescription()}" /></td>
+			</tr>
+		</c:forEach>
+	</table>
+
 </body>
 </html>

@@ -88,4 +88,28 @@ public class ContextManager {
 		return returnThis;
 	}
 
+	public Question getQuestion(int questionId) {
+		String query = "FROM " + Question.class.getSimpleName() + " e WHERE e.id='" + questionId + "'";
+		return (Question)em.createQuery(query).getSingleResult();
+	}
+
+	public Boolean deleteQuestion(int questionId) {
+		return false;
+		/*
+		String query = "FROM " + Question.class.getSimpleName() + " e WHERE e.id='" + questionId + "'";
+		Question question = (Question)em.createQuery(query).getSingleResult();
+		
+		//Cannot delete if quizzes have been created using the question
+		if(question.getQuiz().isEmpty()){
+			em.getTransaction().begin();
+			em.remove(question);
+			em.getTransaction().commit();
+			return true;
+		}
+		else{
+			return false;
+		}
+		*/
+	}
+
 }

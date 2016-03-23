@@ -66,6 +66,17 @@ public class AdminServlet extends HttpServlet {
 			getQuestions(request);
 			RequestDispatcher rd = getServletContext().getRequestDispatcher("/ViewQuizes.jsp");
 			rd.include(request, response);
+		} else if (request.getParameter("getQuestion") != null) {
+			Question question = cm.getQuestion(Integer.parseInt(request.getParameter("getQuestion")));
+			System.out.println(question.getDescription());
+		} else if (request.getParameter("deleteQuestion") != null) {
+			Boolean success = cm.deleteQuestion(Integer.parseInt(request.getParameter("deleteQuestion")));
+			if (!success) {
+				request.setAttribute("noDelete", "Cannot delete question used in existing quizzes");
+			}
+			getQuestions(request);
+			RequestDispatcher rd = getServletContext().getRequestDispatcher("/ViewQuizes.jsp");
+			rd.include(request, response);
 		} else {
 			doGet(request, response);
 		}

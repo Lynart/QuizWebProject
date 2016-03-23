@@ -23,7 +23,7 @@ public class Question {
 	private QuestionType type;
 	@ManyToMany
 	private Collection<Quiz> quizes;
-	@OneToMany
+	@OneToMany(cascade=CascadeType.REMOVE)
 	private Collection<Answer> answers;
 	@OneToOne
 	private Answer correctAnswer;

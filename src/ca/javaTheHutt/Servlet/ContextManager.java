@@ -1,6 +1,8 @@
 package ca.javaTheHutt.Servlet;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 
 import javax.persistence.*;
@@ -28,24 +30,22 @@ public class ContextManager {
 
 	public User Login(String username, String password) {
 		Object user;
-		String query = "FROM "
-						+User.class.getSimpleName()
-						+" e WHERE e.password='"+password+
-						"' AND e.login='"+username+"'";
-		//There has go to to be a less stupid way to do this
-		//Check if user exists
-		try{
-		user = em.createQuery(query).getSingleResult();
+		String query = "FROM " + User.class.getSimpleName() + " e WHERE e.password='" + password + "' AND e.login='"
+				+ username + "'";
+		// There has go to to be a less stupid way to do this
+		// Check if user exists
+		try {
+			user = em.createQuery(query).getSingleResult();
 		}
-		//If user does not exist, exception will be thrown
-		catch(NoResultException e){
+		// If user does not exist, exception will be thrown
+		catch (NoResultException e) {
 			user = null;
 		}
-		//If user is not null, login was successful
-		if(user!=null){
+		// If user is not null, login was successful
+		if (user != null) {
 			return (User) user;
 		}
-		//Login failed
+		// Login failed
 		return null;
 	}
 
@@ -77,6 +77,15 @@ public class ContextManager {
 	public void Destroy() {
 		em.close();
 		emf.close();
+	}
+
+	public Collection<Question> getAllQuestions() {
+		String query = "FROM " + Question.class.getSimpleName() + " e";
+		Collection<Question> returnThis;
+		//This is totally unsafe in a production environment
+		returnThis = (Collection<Question>)em.createQuery(query).getResultList();
+
+		return returnThis;
 	}
 
 }

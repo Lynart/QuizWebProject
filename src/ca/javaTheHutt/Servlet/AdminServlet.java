@@ -1,6 +1,7 @@
 package ca.javaTheHutt.Servlet;
 
 import java.io.IOException;
+import java.util.Collection;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
@@ -62,11 +63,17 @@ public class AdminServlet extends HttpServlet {
 			rd.include(request, response);
 
 		} else if (request.getParameter("viewQuestions") != null) {
-			RequestDispatcher rd = getServletContext().getRequestDispatcher("/poop.html");
+			getQuestions(request);
+			RequestDispatcher rd = getServletContext().getRequestDispatcher("/ViewQuizes.jsp");
 			rd.include(request, response);
 		} else {
 			doGet(request, response);
 		}
+	}
+
+	private void getQuestions(HttpServletRequest request) {
+		Collection<Question> questions = cm.getAllQuestions();
+		request.setAttribute("questions", questions);
 	}
 
 	private void addQuestion(HttpServletRequest request) {
@@ -183,6 +190,7 @@ public class AdminServlet extends HttpServlet {
 			a.setCorrect(true);
 			a.setQuestion(question);
 			question.addAnswer(a);
+			question.setCorrectAnswer(a);
 
 			cm.AddQuestion(question);
 			break;

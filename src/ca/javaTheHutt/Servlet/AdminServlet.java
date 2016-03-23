@@ -68,7 +68,9 @@ public class AdminServlet extends HttpServlet {
 			rd.include(request, response);
 		} else if (request.getParameter("getQuestion") != null) {
 			Question question = cm.getQuestion(Integer.parseInt(request.getParameter("getQuestion")));
-			System.out.println(question.getDescription());
+			request.setAttribute("question", question);
+			RequestDispatcher rd = getServletContext().getRequestDispatcher("/questionEdit.jsp");
+			rd.include(request, response);
 		} else if (request.getParameter("deleteQuestion") != null) {
 			Boolean success = cm.deleteQuestion(Integer.parseInt(request.getParameter("deleteQuestion")));
 			if (!success) {

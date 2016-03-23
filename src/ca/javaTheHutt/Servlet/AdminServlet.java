@@ -2,6 +2,7 @@ package ca.javaTheHutt.Servlet;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Enumeration;
 import java.util.Iterator;
 
 import javax.servlet.RequestDispatcher;
@@ -48,7 +49,7 @@ public class AdminServlet extends HttpServlet {
 		// TODO Auto-generated method stub
 
 		// This is the hackiest security I have ever written
-		doPost(request,response);
+		doPost(request, response);
 	}
 
 	/**
@@ -82,6 +83,7 @@ public class AdminServlet extends HttpServlet {
 			RequestDispatcher rd = getServletContext().getRequestDispatcher("/ViewQuizes.jsp");
 			rd.include(request, response);
 		} else if (request.getParameter("editQuestion") != null) {
+			System.out.println(request.getParameter("questionId"));
 			addQuestion(request, true);
 		} else {
 			RequestDispatcher rd = getServletContext().getRequestDispatcher("/adminMenu.html");
@@ -95,7 +97,12 @@ public class AdminServlet extends HttpServlet {
 	}
 
 	private void addQuestion(HttpServletRequest request, Boolean edit) {
-		String questionType = request.getParameter("questionType");
+		String questionType;
+		if (edit) {
+			questionType = request.getParameter("editQuestion");
+		} else {
+			questionType = request.getParameter("questionType");
+		}
 		int difficulty = Integer.parseInt(request.getParameter("questionDifficulty"));
 		Question question;
 		Answer a = new Answer();
@@ -103,8 +110,17 @@ public class AdminServlet extends HttpServlet {
 		Answer c = new Answer();
 		Answer d = new Answer();
 		if (edit) {
+			Enumeration<String> test = request.getParameterNames();
+			while(test.hasMoreElements()){
+				System.out.println(test.nextElement());
+			}
+			System.out.println(request.getParameterNames());
 			System.out.println(request.getParameter("questionId"));
-			int test = Integer.parseInt(request.getParameter("questionId"));
+			System.out.println(request.getParameter(request.getParameter("checkA")));
+			System.out.println(request.getParameter(request.getParameter("checkB")));
+			System.out.println(request.getParameter(request.getParameter("checkC")));
+			System.out.println(request.getParameter(request.getParameter("checkD")));
+
 			question = cm.getQuestion(Integer.parseInt(request.getParameter("questionId")));
 			if (question.getType() == QuestionType.Text) {
 				a = question.getCorrectAnswer();

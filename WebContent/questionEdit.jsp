@@ -54,12 +54,12 @@
 
 
 			<form class="col-md-12" action="admin" method="post">
-				>
 
 				<h1>Add a Question</h1>
+				<input type="text" name="questionId" value="${question.getId()}" disabled>
 				<br /> <label for="questionType">Select a question type</label>
 				<div class="form-group">
-					<select class="form-control" id="questionType" name="editQuestion" value=${question.getId}>
+					<select class="form-control" id="questionType" name="editQuestion">
 						<option <c:if test="${question.getType()=='Multichoice'}">selected="selected"
 				</c:if>value="Multichoice">Multiple Choice</option>
 						<option <c:if test="${question.getType()=='Checkbox'}">selected="selected"</c:if>value="Checkbox">Checkbox</option>

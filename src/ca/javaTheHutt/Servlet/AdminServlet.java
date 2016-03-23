@@ -2,6 +2,7 @@ package ca.javaTheHutt.Servlet;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.Iterator;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
@@ -47,8 +48,7 @@ public class AdminServlet extends HttpServlet {
 		// TODO Auto-generated method stub
 
 		// This is the hackiest security I have ever written
-		RequestDispatcher rd = getServletContext().getRequestDispatcher("/adminMenu.html");
-		rd.include(request, response);
+		doPost(request,response);
 	}
 
 	/**
@@ -84,7 +84,8 @@ public class AdminServlet extends HttpServlet {
 		} else if (request.getParameter("editQuestion") != null) {
 			addQuestion(request, true);
 		} else {
-			doGet(request, response);
+			RequestDispatcher rd = getServletContext().getRequestDispatcher("/adminMenu.html");
+			rd.include(request, response);
 		}
 	}
 
@@ -102,13 +103,20 @@ public class AdminServlet extends HttpServlet {
 		Answer c = new Answer();
 		Answer d = new Answer();
 		if (edit) {
-			question=cm.getQuestion(Integer.parseInt(request.getParameter("editQuestion")));
+			System.out.println(request.getParameter("questionId"));
+			int test = Integer.parseInt(request.getParameter("questionId"));
+			question = cm.getQuestion(Integer.parseInt(request.getParameter("questionId")));
+			if (question.getType() == QuestionType.Text) {
+				a = question.getCorrectAnswer();
+			} else {
+				Iterator<Answer> it = question.getAnswers().iterator();
+				a = it.next();
+				b = it.next();
+				c = it.next();
+				d = it.next();
+			}
 		} else {
 			question = new Question();
-			a = new Answer();
-			b = new Answer();
-			c = new Answer();
-			d = new Answer();
 		}
 		question.setDifficulty(difficulty);
 
@@ -148,12 +156,12 @@ public class AdminServlet extends HttpServlet {
 				d.setCorrect(false);
 			d.setDescription(request.getParameter("checkD"));
 
-			question.addAnswer(a);
-			question.addAnswer(b);
-			question.addAnswer(c);
-			question.addAnswer(d);
-
-			cm.AddQuestion(question);
+			if (!edit) {
+				question.addAnswer(a);
+				question.addAnswer(b);
+				question.addAnswer(c);
+				question.addAnswer(d);
+			}
 			break;
 
 		// Repeated code sucks but at least this isn't production code
@@ -202,11 +210,12 @@ public class AdminServlet extends HttpServlet {
 			default:
 				break;
 			}
-			question.addAnswer(a);
-			question.addAnswer(b);
-			question.addAnswer(c);
-			question.addAnswer(d);
-			cm.AddQuestion(question);
+			if (!edit) {
+				question.addAnswer(a);
+				question.addAnswer(b);
+				question.addAnswer(c);
+				question.addAnswer(d);
+			}
 			break;
 		case "Text":
 			question.setType(QuestionType.Text);
@@ -215,14 +224,19 @@ public class AdminServlet extends HttpServlet {
 			a.setDescription(request.getParameter("shortAnswer"));
 			a.setCorrect(true);
 			a.setQuestion(question);
-			question.addAnswer(a);
+			if (!edit) {
+				question.addAnswer(a);
+			}
 			question.setCorrectAnswer(a);
-
-			cm.AddQuestion(question);
 			break;
 
 		default:
 			break;
+		}
+		if (edit) {
+			cm.EditQuestion(question);
+		} else {
+			cm.AddQuestion(question);
 		}
 	}
 

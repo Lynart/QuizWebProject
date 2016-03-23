@@ -62,6 +62,11 @@ public class ContextManager {
 		}
 		em.getTransaction().commit();
 	}
+	public void EditQuestion(Question question) {
+		em.getTransaction().begin();
+		em.merge(question);
+		em.getTransaction().commit();
+	}
 
 	// This method is probably not needed?
 	public static DataSource getMySQLDataSource() {

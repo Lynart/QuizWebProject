@@ -94,8 +94,6 @@ public class ContextManager {
 	}
 
 	public Boolean deleteQuestion(int questionId) {
-		return false;
-		/*
 		String query = "FROM " + Question.class.getSimpleName() + " e WHERE e.id='" + questionId + "'";
 		Question question = (Question)em.createQuery(query).getSingleResult();
 		
@@ -109,7 +107,6 @@ public class ContextManager {
 		else{
 			return false;
 		}
-		*/
 	}
 
 }

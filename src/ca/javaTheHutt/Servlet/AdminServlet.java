@@ -58,7 +58,7 @@ public class AdminServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		if (request.getParameter("questionType") != null) {
-			addQuestion(request);
+			addQuestion(request, false);
 			RequestDispatcher rd = getServletContext().getRequestDispatcher("/question.html");
 			rd.include(request, response);
 
@@ -69,6 +69,8 @@ public class AdminServlet extends HttpServlet {
 		} else if (request.getParameter("getQuestion") != null) {
 			Question question = cm.getQuestion(Integer.parseInt(request.getParameter("getQuestion")));
 			request.setAttribute("question", question);
+			request.setAttribute("answerText", question.getAnswerText());
+			request.setAttribute("correctIndex", question.getCorrectIndexes());
 			RequestDispatcher rd = getServletContext().getRequestDispatcher("/questionEdit.jsp");
 			rd.include(request, response);
 		} else if (request.getParameter("deleteQuestion") != null) {
@@ -79,6 +81,8 @@ public class AdminServlet extends HttpServlet {
 			getQuestions(request);
 			RequestDispatcher rd = getServletContext().getRequestDispatcher("/ViewQuizes.jsp");
 			rd.include(request, response);
+		} else if (request.getParameter("editQuestion") != null) {
+			addQuestion(request, true);
 		} else {
 			doGet(request, response);
 		}
@@ -89,15 +93,24 @@ public class AdminServlet extends HttpServlet {
 		request.setAttribute("questions", questions);
 	}
 
-	private void addQuestion(HttpServletRequest request) {
+	private void addQuestion(HttpServletRequest request, Boolean edit) {
 		String questionType = request.getParameter("questionType");
 		int difficulty = Integer.parseInt(request.getParameter("questionDifficulty"));
-		Question question = new Question();
-		question.setDifficulty(difficulty);
+		Question question;
 		Answer a = new Answer();
 		Answer b = new Answer();
 		Answer c = new Answer();
 		Answer d = new Answer();
+		if (edit) {
+			question=cm.getQuestion(Integer.parseInt(request.getParameter("editQuestion")));
+		} else {
+			question = new Question();
+			a = new Answer();
+			b = new Answer();
+			c = new Answer();
+			d = new Answer();
+		}
+		question.setDifficulty(difficulty);
 
 		switch (questionType) {
 		case "Checkbox":

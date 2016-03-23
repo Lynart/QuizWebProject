@@ -31,7 +31,7 @@ public class AdminServlet extends HttpServlet {
 		super();
 		// TODO Auto-generated constructor stub
 	}
-	
+
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
 		cm = new ContextManager();
@@ -58,10 +58,15 @@ public class AdminServlet extends HttpServlet {
 			throws ServletException, IOException {
 		if (request.getParameter("questionType") != null) {
 			addQuestion(request);
+			RequestDispatcher rd = getServletContext().getRequestDispatcher("/question.html");
+			rd.include(request, response);
 
+		} else if (request.getParameter("viewQuestions") != null) {
+			RequestDispatcher rd = getServletContext().getRequestDispatcher("/poop.html");
+			rd.include(request, response);
 		} else {
+			doGet(request, response);
 		}
-		doGet(request, response);
 	}
 
 	private void addQuestion(HttpServletRequest request) {
@@ -73,75 +78,77 @@ public class AdminServlet extends HttpServlet {
 		Answer b = new Answer();
 		Answer c = new Answer();
 		Answer d = new Answer();
-		
+
 		switch (questionType) {
 		case "Checkbox":
 			question.setType(QuestionType.Checkbox);
 			question.setDescription(request.getParameter("checkQuestion"));
-			
-			//I admit, this looks stupid but I am not sure if you have to set both ends
-			//I miss .NET entity framework
+
+			// I admit, this looks stupid but I am not sure if you have to set
+			// both ends
+			// I miss .NET entity framework
 			a.setQuestion(question);
-			if(request.getParameter("boolA")!=null)
+			if (request.getParameter("boolA") != null)
 				a.setCorrect(true);
 			else
 				a.setCorrect(false);
 			a.setDescription(request.getParameter("checkA"));
-			
+
 			b.setQuestion(question);
-			if(request.getParameter("boolB")!=null)
+			if (request.getParameter("boolB") != null)
 				b.setCorrect(true);
 			else
 				b.setCorrect(false);
 			b.setDescription(request.getParameter("checkB"));
-			
+
 			c.setQuestion(question);
-			if(request.getParameter("boolC")!=null)
+			if (request.getParameter("boolC") != null)
 				c.setCorrect(true);
 			else
 				c.setCorrect(false);
 			c.setDescription(request.getParameter("checkC"));
-		
+
 			d.setQuestion(question);
-			if(request.getParameter("boolD")!=null)
+			if (request.getParameter("boolD") != null)
 				d.setCorrect(true);
 			else
 				d.setCorrect(false);
 			d.setDescription(request.getParameter("checkD"));
-			
+
 			question.addAnswer(a);
 			question.addAnswer(b);
 			question.addAnswer(c);
 			question.addAnswer(d);
-			
+
 			cm.AddQuestion(question);
 			break;
-			
-		//Repeated code sucks but at least this isn't production code
+
+		// Repeated code sucks but at least this isn't production code
 		case "Multichoice":
 			question.setType(QuestionType.Multichoice);
 			question.setDescription(request.getParameter("multiQ"));
-			
-			//Didn't know you can't have same var names in switches; I clearly don't use switches enough
-			//....or .NET's compiler
+
+			// Didn't know you can't have same var names in switches; I clearly
+			// don't use switches enough
+			// ....or .NET's compiler
 			a.setDescription(request.getParameter("multiA"));
 			a.setQuestion(question);
 			a.setCorrect(false);
-			
+
 			b.setDescription(request.getParameter("multiB"));
 			b.setQuestion(question);
 			b.setCorrect(false);
-			
+
 			c.setDescription(request.getParameter("multiC"));
 			c.setQuestion(question);
 			c.setCorrect(false);
-			
+
 			d.setDescription(request.getParameter("multiD"));
 			d.setQuestion(question);
 			d.setCorrect(false);
-			
+
 			String correctA = request.getParameter("multiAnswer");
-			switch(correctA){
+			switch (correctA) {
 			case "A":
 				a.setCorrect(true);
 				question.setCorrectAnswer(a);
@@ -158,7 +165,7 @@ public class AdminServlet extends HttpServlet {
 				d.setCorrect(true);
 				question.setCorrectAnswer(d);
 				break;
-			//THIS SHOULD NEVER HIT
+			// THIS SHOULD NEVER HIT
 			default:
 				break;
 			}
@@ -171,15 +178,15 @@ public class AdminServlet extends HttpServlet {
 		case "Text":
 			question.setType(QuestionType.Text);
 			question.setDescription(request.getParameter("shortQuestion"));
-			
+
 			a.setDescription(request.getParameter("shortAnswer"));
 			a.setCorrect(true);
 			a.setQuestion(question);
 			question.addAnswer(a);
-			
+
 			cm.AddQuestion(question);
 			break;
-				
+
 		default:
 			break;
 		}

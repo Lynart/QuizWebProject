@@ -23,7 +23,7 @@
 	<nav class="navbar navbar-inverse" style="margin: 0px;">
 		<div class="container-fluid">
 
-			<div
+			<div>
 				class="navbar-header>
 
 	    </div>
@@ -54,12 +54,14 @@
 
 
 			<form class="col-md-12" action="admin" method="post">
+			
 
 				<h1>Add a Question</h1>
-				<input type="text" name="questionId" value="${question.getId()}" disabled>
+				<input type="hidden" name="editQuestion" value="${question.getId()}"/>
+				<input type="hidden" name="questionTypeH" value="${question.getType()}"/>
 				<br /> <label for="questionType">Select a question type</label>
 				<div class="form-group">
-					<select class="form-control" id="questionType" name="editQuestion">
+					<select class="form-control" id="questionType" disabled>
 						<option <c:if test="${question.getType()=='Multichoice'}">selected="selected"
 				</c:if>value="Multichoice">Multiple Choice</option>
 						<option <c:if test="${question.getType()=='Checkbox'}">selected="selected"</c:if>value="Checkbox">Checkbox</option>
@@ -164,7 +166,7 @@
 							"</div>" +
 							"<div class='form-group'>" +
 							"<label for='shortAnswer'>Answer Text</label>" +
-							"<input type='text' class='form-control' name='shortAnswer' placeholder='Enter the answer text'>" +
+							"<input type='text' class='form-control' name='shortAnswer' value='${answerText[0]}'>" +
 							"</div>" +
 							"<button type='submit' class='btn btn-success' onClick='successMessage()'>Submit</button>";
 		

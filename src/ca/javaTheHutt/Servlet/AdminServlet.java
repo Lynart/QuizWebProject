@@ -83,8 +83,11 @@ public class AdminServlet extends HttpServlet {
 			RequestDispatcher rd = getServletContext().getRequestDispatcher("/ViewQuizes.jsp");
 			rd.include(request, response);
 		} else if (request.getParameter("editQuestion") != null) {
-			System.out.println(request.getParameter("questionId"));
 			addQuestion(request, true);
+			getQuestions(request);
+			System.out.println("Should redirect");
+			RequestDispatcher rd = getServletContext().getRequestDispatcher("/ViewQuizes.jsp");
+			rd.include(request, response);
 		} else {
 			RequestDispatcher rd = getServletContext().getRequestDispatcher("/adminMenu.html");
 			rd.include(request, response);
@@ -98,11 +101,12 @@ public class AdminServlet extends HttpServlet {
 
 	private void addQuestion(HttpServletRequest request, Boolean edit) {
 		String questionType;
-		if (edit) {
-			questionType = request.getParameter("editQuestion");
-		} else {
+
+		if(edit)
+			questionType = request.getParameter("questionTypeH");
+		else
 			questionType = request.getParameter("questionType");
-		}
+
 		int difficulty = Integer.parseInt(request.getParameter("questionDifficulty"));
 		Question question;
 		Answer a = new Answer();
@@ -110,18 +114,7 @@ public class AdminServlet extends HttpServlet {
 		Answer c = new Answer();
 		Answer d = new Answer();
 		if (edit) {
-			Enumeration<String> test = request.getParameterNames();
-			while(test.hasMoreElements()){
-				System.out.println(test.nextElement());
-			}
-			System.out.println(request.getParameterNames());
-			System.out.println(request.getParameter("questionId"));
-			System.out.println(request.getParameter(request.getParameter("checkA")));
-			System.out.println(request.getParameter(request.getParameter("checkB")));
-			System.out.println(request.getParameter(request.getParameter("checkC")));
-			System.out.println(request.getParameter(request.getParameter("checkD")));
-
-			question = cm.getQuestion(Integer.parseInt(request.getParameter("questionId")));
+			question = cm.getQuestion(Integer.parseInt(request.getParameter("editQuestion")));
 			if (question.getType() == QuestionType.Text) {
 				a = question.getCorrectAnswer();
 			} else {
@@ -131,6 +124,7 @@ public class AdminServlet extends HttpServlet {
 				c = it.next();
 				d = it.next();
 			}
+			questionType = question.getType().toString();
 		} else {
 			question = new Question();
 		}

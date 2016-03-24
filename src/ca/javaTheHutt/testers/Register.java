@@ -38,6 +38,10 @@ public class Register {
 		User u = new User();
 		u.setLogin("admin@admin.ca");
 		u.setPassword("1234");
+		
+		User u2 = new User();
+		u2.setLogin("student@student.ca");
+		u2.setPassword("1234");
 		/*
 		Quiz q = new Quiz();
 		q.setUser(u);
@@ -56,6 +60,7 @@ public class Register {
 			getEntityManager();
 			em.getTransaction().begin();
 			em.persist(u);
+			em.persist(u2);
 			/*
 			em.persist(q);
 			em.persist(question);

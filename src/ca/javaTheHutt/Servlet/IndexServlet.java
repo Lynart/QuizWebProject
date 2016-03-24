@@ -80,7 +80,7 @@ public class IndexServlet extends HttpServlet {
 			getServletContext().getRequestDispatcher("/admin").forward(request, response);
 		}
 		else{
-			//Forward to quiz taking stuff
+			getServletContext().getRequestDispatcher("/user").forward(request, response);
 		}
 	}
 

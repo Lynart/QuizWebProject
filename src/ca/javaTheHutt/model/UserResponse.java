@@ -18,6 +18,7 @@ public class UserResponse {
 	@OneToOne @Nullable
 	//Could be null, need to test what happens if it is
 	private Answer answer;
+	private Boolean correct;
 
 	// getters
 	public int getId() {
@@ -39,6 +40,10 @@ public class UserResponse {
 	public Answer getAnswer() {
 		return answer;
 	}
+	
+	private Boolean getCorrect(){
+		return correct;
+	}
 
 	// setters
 	public void setResponse(String response) {
@@ -55,5 +60,9 @@ public class UserResponse {
 
 	public void setAnswer(Answer answer) {
 		this.answer = answer;
+	}
+	
+	private void setCorrect(Boolean c){
+		correct = c;
 	}
 }

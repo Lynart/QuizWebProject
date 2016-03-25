@@ -1,5 +1,7 @@
 package ca.javaTheHutt.testers;
 
+import java.util.Collection;
+
 import javax.persistence.*;
 
 import ca.javaTheHutt.model.Answer;
@@ -75,8 +77,19 @@ public class Register {
 		}
 	}
 	
+	public void TestRandomize(){
+		getEntityManager();
+		Query query = em.createNativeQuery("select * from Question where difficulty = 1 order by rand() limit 3", Question.class);
+		Collection<Question> test;
+		test = query.getResultList();
+		test.toString();
+		em.close();
+		emf.close();
+	}
+	
 	public String TestRetrieval(){
 		getEntityManager();
+		
 		String q = "FROM "+User.class.getSimpleName()+" e WHERE e.password='1234'";
 		User v = (User)em.createQuery(q).getSingleResult();
 		System.out.println(v.getLogin());
@@ -91,7 +104,6 @@ public class Register {
 	
 	public static void main ( String[] args){
 		Register register = new Register();
-		register.resetTables();
-		register.TestTables();
+		register.TestRandomize();
 	}
 }

@@ -23,8 +23,43 @@ public class ContextManager {
 
 	// Stub, implement later
 	// Need a user object or user name (make it hacky who cares)
-	public Quiz GenerateQuiz() {
+	public Quiz GenerateQuiz(User u) {
 		Quiz q = new Quiz();
+		q.setUser(u);
+		Query query = em.createNativeQuery("select * from Question where difficulty = 1 order by rand() limit 3",
+				Question.class);
+		Collection<Question> easyQuestions;
+		easyQuestions = query.getResultList();
+
+		query = em.createNativeQuery("select * from Question where difficulty = 2 order by rand() limit 2",
+				Question.class);
+		Collection<Question> medQuestions;
+		medQuestions = query.getResultList();
+
+		query = em.createNativeQuery("select * from Question where difficulty = 3 order by rand() limit 1",
+				Question.class);
+		Collection<Question> hardQuestions;
+		hardQuestions = query.getResultList();
+
+		Iterator<Question> it = easyQuestions.iterator();
+		while (it.hasNext()) {
+			q.addQuestion(it.next());
+		}
+
+		it = medQuestions.iterator();
+		while (it.hasNext()) {
+			q.addQuestion(it.next());
+		}
+
+		it = hardQuestions.iterator();
+		while (it.hasNext()) {
+			q.addQuestion(it.next());
+		}
+
+		// Save the quiz
+		em.getTransaction().begin();
+		em.persist(q);
+		em.getTransaction().commit();
 		return q;
 	}
 
@@ -62,6 +97,7 @@ public class ContextManager {
 		}
 		em.getTransaction().commit();
 	}
+
 	public void EditQuestion(Question question) {
 		em.getTransaction().begin();
 		em.merge(question);
@@ -87,31 +123,94 @@ public class ContextManager {
 	public Collection<Question> getAllQuestions() {
 		String query = "FROM " + Question.class.getSimpleName() + " e";
 		Collection<Question> returnThis;
-		//This is totally unsafe in a production environment
-		returnThis = (Collection<Question>)em.createQuery(query).getResultList();
+		// This is totally unsafe in a production environment
+		returnThis = (Collection<Question>) em.createQuery(query).getResultList();
 
 		return returnThis;
 	}
 
 	public Question getQuestion(int questionId) {
 		String query = "FROM " + Question.class.getSimpleName() + " e WHERE e.id='" + questionId + "'";
-		return (Question)em.createQuery(query).getSingleResult();
+		return (Question) em.createQuery(query).getSingleResult();
 	}
 
 	public Boolean deleteQuestion(int questionId) {
 		String query = "FROM " + Question.class.getSimpleName() + " e WHERE e.id='" + questionId + "'";
-		Question question = (Question)em.createQuery(query).getSingleResult();
-		
-		//Cannot delete if quizzes have been created using the question
-		if(question.getQuiz().isEmpty()){
+		Question question = (Question) em.createQuery(query).getSingleResult();
+
+		// Cannot delete if quizzes have been created using the question
+		if (question.getQuiz().isEmpty()) {
 			em.getTransaction().begin();
 			em.remove(question);
 			em.getTransaction().commit();
 			return true;
-		}
-		else{
+		} else {
 			return false;
 		}
+	}
+
+	public Question UpdateQuiz(int quizId, int questionIndex, String[] userAnswers) {
+		String getQuiz = "FROM " + Quiz.class.getSimpleName() + " e WHERE e.id='" + quizId + "'";
+		Quiz quiz = (Quiz) em.createQuery(getQuiz).getSingleResult();
+
+		// I really hate EclipseLinks' lazy loading compared to .NET
+		ArrayList<Question> questions = new ArrayList<Question>(quiz.getQuestions());
+
+		Question checkQuestion = questions.get(questionIndex);
+		Question returnQuestion = null;
+		if (questionIndex < 5) {
+			returnQuestion = questions.get(++questionIndex);
+		}
+		// Really stupid how EclipseLink can't lazy fetch this
+		Collection<Answer> a = checkQuestion.getAnswers();
+		ArrayList<Answer> answers = new ArrayList<Answer>(checkQuestion.getAnswers());
+
+		// This one is annoying; you have to create a user response for each
+		// userAnswer that isn't null
+		// Skipping this for now
+		if (checkQuestion.getType() == QuestionType.Checkbox) {
+			Boolean right = true;
+			for (int i = 0; i < answers.size(); i++) {
+				// If answer is correct, and user did not select this answer,
+				// it's wrong
+				if (answers.get(i).getCorrect()) {
+					if (userAnswers[i] == null) {
+						right = false;
+						break;
+					}
+				}
+				// If answer is not correct, and user selected the answer, it's
+				// wrong
+				else {
+					if (userAnswers[i] != null) {
+						right = false;
+						break;
+					}
+				}
+			}
+			if (right) {
+				quiz.setUserScore((quiz.getUserScore() + 1));
+			}
+		} else {
+			if (checkQuestion.getCorrectAnswer().getDescription().equalsIgnoreCase(userAnswers[0])) {
+				quiz.setUserScore((quiz.getUserScore() + 1));
+			}
+		}
+		em.getTransaction().begin();
+		em.merge(quiz);
+		em.getTransaction().commit();
+		// If it returns null, quiz is complete!
+		return returnQuestion;
+
+	}
+
+	public Collection<Quiz> getQuizzes(User u) {
+		Query query = em.createNativeQuery("select * from Quiz where User_ID = " + u.getId(),
+				Quiz.class);
+		Collection<Quiz> returnThis;
+		// This is totally unsafe in a production environment
+		returnThis = (Collection<Quiz>) query.getResultList();
+		return returnThis;
 	}
 
 }

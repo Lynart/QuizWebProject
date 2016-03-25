@@ -10,6 +10,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -80,6 +81,8 @@ public class IndexServlet extends HttpServlet {
 			getServletContext().getRequestDispatcher("/admin").forward(request, response);
 		}
 		else{
+			HttpSession session = request.getSession(true);
+			session.setAttribute("user", user);
 			getServletContext().getRequestDispatcher("/user").forward(request, response);
 		}
 	}

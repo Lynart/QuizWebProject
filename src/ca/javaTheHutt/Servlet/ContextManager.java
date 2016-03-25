@@ -3,6 +3,7 @@ package ca.javaTheHutt.Servlet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 
 import javax.persistence.*;
@@ -205,12 +206,42 @@ public class ContextManager {
 	}
 
 	public Collection<Quiz> getQuizzes(User u) {
-		Query query = em.createNativeQuery("select * from Quiz where User_ID = " + u.getId(),
-				Quiz.class);
+		Query query = em.createNativeQuery("select * from Quiz where User_ID = " + u.getId(), Quiz.class);
 		Collection<Quiz> returnThis;
 		// This is totally unsafe in a production environment
 		returnThis = (Collection<Quiz>) query.getResultList();
 		return returnThis;
+	}
+
+	// Returns mean, medium, range low, range high (IN THAT ORDER!)
+	public ScoreStatistics getScoreRates() {
+		String query = "FROM " + Quiz.class.getSimpleName() + " e";
+		Collection<Quiz> quizes = (Collection<Quiz>) em.createQuery(query).getResultList();
+		Iterator<Quiz> qIt = quizes.iterator();
+		ScoreStatistics rc = new ScoreStatistics();
+		int i = 0;
+		ArrayList<Integer> medianCalc = new ArrayList<Integer>();
+		while (qIt.hasNext()) {
+			i++;
+			Quiz q = qIt.next();
+			medianCalc.add(q.getUserScore());
+			rc.mean += q.getUserScore();
+			if (q.getUserScore() < rc.low) {
+				rc.low = q.getUserScore();
+			}
+			if (q.getUserScore() > rc.high) {
+				rc.high = q.getUserScore();
+			}
+		}
+		rc.mean /= i;
+		Collections.sort(medianCalc);
+		if (medianCalc.size() % 2 == 0){
+			rc.median = ((double)medianCalc.get(medianCalc.size()/2)+(double)medianCalc.get(medianCalc.size()/2-1))/2;
+		}
+		else{
+			rc.median = medianCalc.get(medianCalc.size()/2);
+		}
+		return rc;
 	}
 
 }

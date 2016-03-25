@@ -88,6 +88,14 @@ public class AdminServlet extends HttpServlet {
 			System.out.println("Should redirect");
 			RequestDispatcher rd = getServletContext().getRequestDispatcher("/ViewQuizes.jsp");
 			rd.include(request, response);
+		}else if(request.getParameter("viewScores") != null){
+			ScoreStatistics scores = cm.getScoreRates();
+			request.setAttribute("mean", scores.mean);
+			request.setAttribute("median", scores.median);
+			request.setAttribute("low", scores.low);
+			request.setAttribute("high", scores.high);
+			RequestDispatcher rd = getServletContext().getRequestDispatcher("/scores.jsp");
+			rd.include(request, response);
 		} else {
 			RequestDispatcher rd = getServletContext().getRequestDispatcher("/adminMenu.html");
 			rd.include(request, response);

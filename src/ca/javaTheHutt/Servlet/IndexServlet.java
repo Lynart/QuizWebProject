@@ -72,15 +72,25 @@ public class IndexServlet extends HttpServlet {
 		String pwd = request.getParameter("pass");
 
 		user = cm.Login(email, pwd);
-		if (user == null) {
+		if(request.getParameter("registerUser") != null){
+			RequestDispatcher rd = getServletContext().getRequestDispatcher("/register.html");
+			rd.include(request, response);
+		}else if(request.getParameter("addUser") != null){
+			User u = new User(request.getParameter("addUser"),request.getParameter("pass1"));
+			
+			
+			cm.AddUser(u);
+
+			getServletContext().getRequestDispatcher("/admin").forward(request, response);
+			//contentmanager.java
+		}else if (user == null) {
 			RequestDispatcher rd = getServletContext().getRequestDispatcher("/index.html");
 			rd.include(request, response);
 		} else if (user.getLogin().equalsIgnoreCase("admin@admin.ca")){
 			//Originally using the below for security, security will be assumed instead
 			//request.getSession().setAttribute("user", user);
 			getServletContext().getRequestDispatcher("/admin").forward(request, response);
-		}
-		else{
+		}else{
 			HttpSession session = request.getSession(true);
 			session.setAttribute("user", user);
 			getServletContext().getRequestDispatcher("/user").forward(request, response);

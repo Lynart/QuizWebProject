@@ -22,10 +22,22 @@
 	text-align: center;
 }
 
+body {
+	color: white !important;
+}
 
 h1{
 	text-align: center;	
 	color: white !important;
+}
+
+p{
+	color: white !important;
+}
+
+table {
+	color: white !important;
+	width: 100%;
 }
 
 

@@ -79,9 +79,11 @@ public class ContextManager {
 		}
 		// If user is not null, login was successful
 		if (user != null) {
+			System.out.println("Login worked");
 			return (User) user;
 		}
 		// Login failed
+		System.out.println("Login failed");
 		return null;
 	}
 
@@ -96,6 +98,13 @@ public class ContextManager {
 		while (a.hasNext()) {
 			em.persist(a.next());
 		}
+		em.getTransaction().commit();
+	}
+	
+	public void AddUser(User u) {
+		em.getTransaction().begin();
+		em.persist(u);
+		
 		em.getTransaction().commit();
 	}
 

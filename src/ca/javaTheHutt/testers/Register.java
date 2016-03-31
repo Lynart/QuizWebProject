@@ -1,5 +1,7 @@
 package ca.javaTheHutt.testers;
 
+import java.util.Collection;
+
 import javax.persistence.*;
 
 import ca.javaTheHutt.model.Answer;
@@ -36,9 +38,13 @@ public class Register {
 	
 	public void TestTables(){
 		User u = new User();
-		u.setLogin("vince@gmail.com");
+		u.setLogin("admin@admin.ca");
 		u.setPassword("1234");
 		
+		User u2 = new User();
+		u2.setLogin("student@student.ca");
+		u2.setPassword("1234");
+		/*
 		Quiz q = new Quiz();
 		q.setUser(u);
 		u.addQuiz(q);
@@ -50,14 +56,18 @@ public class Register {
 		Answer a = new Answer();
 		a.setQuestion(question);
 		question.addAnswer(a);
+		*/
 		
 		try{
 			getEntityManager();
 			em.getTransaction().begin();
 			em.persist(u);
+			em.persist(u2);
+			/*
 			em.persist(q);
 			em.persist(question);
 			em.persist(a);
+			*/
 			em.getTransaction().commit();
 			em.close();
 			emf.close();
@@ -67,8 +77,19 @@ public class Register {
 		}
 	}
 	
-	public void TestRetrieval(){
+	public void TestRandomize(){
 		getEntityManager();
+		Query query = em.createNativeQuery("select * from Question where difficulty = 1 order by rand() limit 3", Question.class);
+		Collection<Question> test;
+		test = query.getResultList();
+		test.toString();
+		em.close();
+		emf.close();
+	}
+	
+	public String TestRetrieval(){
+		getEntityManager();
+		
 		String q = "FROM "+User.class.getSimpleName()+" e WHERE e.password='1234'";
 		User v = (User)em.createQuery(q).getSingleResult();
 		System.out.println(v.getLogin());
@@ -77,12 +98,12 @@ public class Register {
 		System.out.println(quiz.getUserScore());
 		em.close();
 		emf.close();
+		return v.getLogin();
+		
 	}
 	
 	public static void main ( String[] args){
 		Register register = new Register();
-		register.resetTables();
-		register.TestTables();
-		register.TestRetrieval();
+		register.TestRandomize();
 	}
 }

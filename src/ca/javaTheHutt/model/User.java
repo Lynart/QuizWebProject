@@ -16,7 +16,11 @@ public class User {
 	private String password;
 	@OneToMany
 	private Collection<Quiz> quizes;
-
+	
+	public User(String log, String pass){
+		login = log;
+		password = pass;
+	}
 	// getters
 	public int getId() {
 		return id;

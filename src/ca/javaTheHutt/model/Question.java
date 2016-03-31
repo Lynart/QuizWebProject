@@ -2,6 +2,7 @@ package ca.javaTheHutt.model;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 
 import javax.persistence.*;
 
@@ -21,9 +22,9 @@ public class Question {
 	// Will hardcode type of questions and construct the UI accordingly
 	@Enumerated(EnumType.STRING)
 	private QuestionType type;
-	@ManyToOne
-	private Quiz quiz;
-	@OneToMany
+	@ManyToMany
+	private Collection<Quiz> quizes;
+	@OneToMany(cascade=CascadeType.REMOVE)
 	private Collection<Answer> answers;
 	@OneToOne
 	private Answer correctAnswer;
@@ -60,8 +61,8 @@ public class Question {
 		return type;
 	}
 
-	public Quiz getQuiz() {
-		return quiz;
+	public Collection<Quiz> getQuiz() {
+		return quizes;
 	}
 
 	public Collection<Answer> getAnswers() {
@@ -105,8 +106,8 @@ public class Question {
 		type = t;
 	}
 
-	public void setQuiz(Quiz q) {
-		quiz = q;
+	public void addQuiz(Quiz q) {
+		quizes.add(q);
 	}
 
 	public void addAnswer(Answer a) {
@@ -134,11 +135,42 @@ public class Question {
 		answers = new ArrayList<Answer>();
 		subQuestions = new ArrayList<Question>();
 		userResponses = new ArrayList<UserResponse>();
+		quizes = new ArrayList<Quiz>();
 	}
 
 	// Useful methods
 	public String toString() {
 		return this.description;
+	}
+	
+	// Returns all answer descriptions/text in a string array
+	public String[] getAnswerText(){
+		String[] rc = new String[answers.size()];
+		Iterator<Answer> it = answers.iterator();
+		for(int i=0; it.hasNext(); i++){
+			rc[i]=it.next().getDescription();
+		}
+		return rc;
+	}
+	
+	// Returns the index of the correct answer
+	public int[] getCorrectIndexes(){
+		int[] rc = new int[answers.size()];
+		if(answers.size()==1){
+			rc[0]=1;
+			return rc;
+		}
+		Iterator<Answer> it = answers.iterator();
+		for(int i=0; it.hasNext(); i++){
+			if(it.next().getCorrect()){
+				rc[i]=1;
+			}
+			else{
+				rc[i]=0;
+			}
+		}
+		//This should never hit unless somebody botched up question setup
+		return rc;
 	}
 
 	// May be useful when randomizing question selection
